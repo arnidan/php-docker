@@ -14,6 +14,7 @@ RUN docker-php-ext-install \
         simplexml \
         pdo \
         pdo_mysql \
+        mysqli \
         pcntl \
         bcmath \
         sockets \
