@@ -1,39 +1,34 @@
 FROM arnidan/php:latest
 
-RUN apk add --update --no-cache \
-    php7-xml \
-    php7-zip \
-    php7-session \
-    php7-shmop \
-    php7-simplexml \
-    php7-sockets \
-    php7-sqlite3 \
-    php7-sysvmsg \
-    php7-mysqlnd \
-    php7-openssl \
-    php7-pcntl \
-    php7-pdo \
-    php7-pdo_mysql \
-    php7-pdo_pgsql \
-    php7-pdo_sqlite \
-    php7-pgsql \
-    php7-gd \
-    php7-gmp \
-    php7-imap \
-    php7-intl \
-    php7-json \
-    php7-ldap \
-    php7-mbstring \
-    php7-mysqli \
-    php7-bcmath \
-    php7-bz2 \
-    php7-calendar \
-    php7-ctype \
-    php7-curl \
-    php7-dba \
-    php7-dom \
-    php7-exif \
-    php7-pear \
-    php7-phpdbg \
-    php7-amqp \
+RUN apt update && apt install -y \
+    libxml2-dev \
+    libzip-dev \
+    libsqlite3-dev \
+    librabbitmq-dev \
+    libssh-dev \
+    libsodium-dev
+
+RUN docker-php-ext-install \
+        xml \
+        zip \
+        simplexml \
+        pdo \
+        pdo_mysql \
+        pcntl \
+        bcmath \
+        sockets \
+        sodium \
+    && pecl install amqp \
+    && docker-php-ext-enable amqp
+
+RUN docker-php-source extract \
+    && cd /usr/src/php \
+    && ./buildconf --force \
+    && ./configure --enable-phpdbg \
+    && make -j8 \
+    && make install-phpdbg \
+    && make clean \
+    && docker-php-source delete
+
+RUN php -m
 
