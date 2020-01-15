@@ -20,8 +20,8 @@ RUN docker-php-ext-install \
         bcmath \
         sockets \
         sodium \
-    && pecl install amqp \
-    && docker-php-ext-enable amqp
+    && pecl install amqp redis \
+    && docker-php-ext-enable amqp redis
 
 RUN php -m
 
