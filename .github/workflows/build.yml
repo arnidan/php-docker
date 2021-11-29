@@ -17,8 +17,8 @@ jobs:
       matrix:
         image: 
           - php
-          - php-phpqa
-          - php-testing
+          # - php-phpqa
+          # - php-testing
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
