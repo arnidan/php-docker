@@ -17,8 +17,8 @@ jobs:
       matrix:
         image: 
           - php
-          # - php-phpqa
-          # - php-testing
+          - php-phpqa
+          - php-testing
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -36,3 +36,5 @@ jobs:
           context: ${{ matrix.image }}
           push: true
           tags: ${{ env.REGISTRY }}/arnidan/php-docker/${{ matrix.image }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
