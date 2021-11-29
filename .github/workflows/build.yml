@@ -15,7 +15,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        IMAGE: 
+        image: 
           - php
           - php-phpqa
           - php-testing
@@ -33,6 +33,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ${{ IMAGE }}
+          context: ${{ matrix.image }}
           push: true
-          tags: arnidan/php-docker/${{ IMAGE }}:latest
+          tags: arnidan/php-docker/${{ matrix.image }}:latest
