@@ -1,8 +1,9 @@
 ARG PHP_VERSION=8.2
-
 FROM ghcr.io/arnidan/php-docker/php:${PHP_VERSION}
 
-RUN apk add --no-cache libxslt-dev && docker-php-ext-install xsl
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+RUN apk add --no-cache libxslt-dev && install-php-extensions xsl
 
 ENV PATH "$PATH:/root/.composer/vendor/bin"
 
