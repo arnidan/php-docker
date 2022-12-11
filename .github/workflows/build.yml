@@ -3,6 +3,8 @@ name: Build and publish a Docker images
 on:
   push:
     branches: ['master']
+  schedule:
+    - cron: '0 0 1 * *'
 
 env:
   REGISTRY: ghcr.io
@@ -16,12 +18,13 @@ jobs:
       packages: write
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: 4
       matrix:
         image: 
           - php
-          - php-phpqa
+          - php-fpm
           - php-testing
+          - php-phpqa
         version:
           - 8.1
           - 8.2

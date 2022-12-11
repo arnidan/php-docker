@@ -3,4 +3,4 @@ FROM php:${PHP_VERSION}-alpine
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN apk add zip git
+RUN apk --no-cache add zip git
