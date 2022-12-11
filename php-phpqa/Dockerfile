@@ -3,7 +3,7 @@ FROM ghcr.io/arnidan/php-docker/php:${PHP_VERSION}
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-RUN apk add --no-cache libxslt-dev && install-php-extensions xsl
+RUN install-php-extensions xsl
 
 ENV PATH "$PATH:/root/.composer/vendor/bin"
 

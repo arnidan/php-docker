@@ -9,11 +9,14 @@ env:
 
 jobs:
   build-and-push-image:
+    name: Build ${{ matrix.image }}:${{ matrix.version }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     strategy:
+      fail-fast: false
+      max-parallel: 2
       matrix:
         image: 
           - php

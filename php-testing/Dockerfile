@@ -1,5 +1,5 @@
 ARG PHP_VERSION=8.2
-FROM ghcr.io/arnidan/php-docker/php:{PHP_VERSION}
+FROM ghcr.io/arnidan/php-docker/php:${PHP_VERSION}
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
