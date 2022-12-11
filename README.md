@@ -1,5 +1,7 @@
 # PHP Docker Images
 
+AMD64 and ARM Docker images with PHP
+
 ## ghcr.io/arnidan/php-docker/php
 
 Provides latest PHP with installed composer
