@@ -1,11 +1,9 @@
-FROM ghcr.io/arnidan/php-docker/php:latest
+ARG PHP_VERSION=8.2
 
-RUN apt update \
-    && apt install -y libxslt-dev \
-    && docker-php-ext-install xsl
+FROM ghcr.io/arnidan/php-docker/php:${PHP_VERSION}
+
+RUN apk add --no-cache libxslt-dev && docker-php-ext-install xsl
 
 ENV PATH "$PATH:/root/.composer/vendor/bin"
 
 RUN composer global require edgedesign/phpqa --update-no-dev
-
-ENTRYPOINT ["docker-php-entrypoint"]

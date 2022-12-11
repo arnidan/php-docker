@@ -19,6 +19,9 @@ jobs:
           - php
           - php-phpqa
           - php-testing
+        version:
+          - 8.1
+          - 8.2
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -38,6 +41,7 @@ jobs:
         with:
           context: ${{ matrix.image }}
           push: true
-          tags: ${{ env.REGISTRY }}/arnidan/php-docker/${{ matrix.image }}:latest
+          build-args: PHP_VERSION=${{ matrix.version }}
+          tags: ${{ env.REGISTRY }}/arnidan/php-docker/${{ matrix.image }}:${{ matrix.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

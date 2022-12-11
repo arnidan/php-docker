@@ -1,4 +1,6 @@
-FROM php:latest
+ARG PHP_VERSION=8.2
+
+FROM php:${PHP_VERSION}-alpine
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

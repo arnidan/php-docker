@@ -1,15 +1,8 @@
-FROM ghcr.io/arnidan/php-docker/php:latest
+FROM ghcr.io/arnidan/php-docker/php:8.2
 
-RUN apt update && apt install -y \
-    libxml2-dev \
-    libzip-dev \
-    libsqlite3-dev \
-    librabbitmq-dev \
-    libssh-dev \
-    libsodium-dev \
-    git
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-RUN docker-php-ext-install \
+RUN install-php-extensions \
         intl \
         xml \
         zip \
@@ -21,10 +14,5 @@ RUN docker-php-ext-install \
         pcntl \
         bcmath \
         sockets \
-        sodium
-
-RUN pecl install redis && docker-php-ext-enable redis 
-RUN pecl install mongodb && docker-php-ext-enable mongodb
-
-RUN php -m
-
+        redis \
+        mongodb
