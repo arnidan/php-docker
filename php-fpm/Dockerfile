@@ -1,4 +1,6 @@
-ARG PHP_VERSION=8.2
+ARG PHP_VERSION=8.3
+ARG WITH_GRPC=0
+
 FROM php:${PHP_VERSION}-fpm-alpine
 
 RUN apk --no-cache add zip git
@@ -15,7 +17,12 @@ RUN install-php-extensions \
         pdo \
         pdo_mysql \
         pdo_sqlite \
+        pdo_pgsql \
         pcntl \
         bcmath \
         sockets \
         redis
+
+RUN if [ "$WITH_GRPC" = "1" ]; then \
+        install-php-extensions protobuf grpc; \
+    fi

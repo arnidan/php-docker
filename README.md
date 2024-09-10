@@ -1,25 +1,11 @@
 # PHP Docker Images
 
-AMD64 and ARM Docker images with PHP
+AMD64 and ARM Docker images with PHP FPM
 
-## ghcr.io/arnidan/php-docker/php
+## ghcr.io/arnidan/php-docker/php-fpm:{version}
 
-Provides latest PHP with installed composer
+Provides latest PHP FPM with installed composer and various of extensions
 
-## ghcr.io/arnidan/php-docker/php-fpm
+## ghcr.io/arnidan/php-docker/php-fpm:{version}-with-grpc
 
-Provides latest PHP FPM with installed composer and varios of extensions
-
-## ghcr.io/arnidan/php-docker/php-phpqa
-
-Provides image with installed [phpqa](https://github.com/EdgedesignCZ/phpqa) package.
-
-Example of usage:
-
-```
-phpqa --analyzedDirs app --output cli --tools phpcs:0,phpmd,phpcpd:0,phpmetrics:0,phploc,pdepend
-```
-
-## ghcr.io/arnidan/php-docker/php-testing
-
-Provides image with some specific packages for testing enironment
+Provides latest PHP FPM with installed composer and various of extensions including grpc and protobuf
