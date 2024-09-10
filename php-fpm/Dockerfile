@@ -9,6 +9,8 @@ RUN apk --no-cache add zip git
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
+ENV MAKEFLAGS=" -j 4"
+
 RUN install-php-extensions \
         intl \
         xml \
