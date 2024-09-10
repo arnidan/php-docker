@@ -12,7 +12,7 @@ env:
 
 jobs:
   build-and-push-image:
-    name: Build ${{ matrix.image }}:${{ matrix.version }}
+    name: Build ${{ matrix.image }}:${{ matrix.version }}${{ matrix.with-grpc == '1' && '-with-grpc' || '' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -54,7 +54,7 @@ jobs:
           context: ${{ matrix.image }}
           push: true
           build-args: PHP_VERSION=${{ matrix.version }},WITH_GRPC=${{ matrix.with-grpc }}
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.image }}:${{ matrix.version }}${{ matrix.with-grpc == '1' && '-with-grpc' || '' }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.image }}:${{ matrix.version }}
           platforms: linux/arm64,linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
