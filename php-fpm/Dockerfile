@@ -1,7 +1,8 @@
 ARG PHP_VERSION=8.3
-ARG WITH_GRPC=0
 
 FROM php:${PHP_VERSION}-fpm-alpine
+
+ARG WITH_GRPC=0
 
 RUN apk --no-cache add zip git
 
