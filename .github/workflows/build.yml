@@ -23,8 +23,8 @@ jobs:
       matrix:
         image:
           - php-fpm
+          - frankenphp
         version:
-          - 8.2
           - 8.3
           - 8.4
         with-grpc:
