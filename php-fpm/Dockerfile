@@ -26,8 +26,19 @@ RUN install-php-extensions \
         sockets \
         redis
 
+# ponytail: prebuilt .so from Alpine's phpXY-pecl-* packages instead of a ~5h pecl compile under QEMU.
+# Same PHP minor = same extension API. Versions lag pecl a bit; apk fetch fails loudly if a package disappears.
 RUN if [ "$WITH_GRPC" = "1" ]; then \
-        install-php-extensions protobuf grpc; \
+        v=$(php -r 'echo PHP_MAJOR_VERSION . PHP_MINOR_VERSION;') \
+        && apk add --no-cache libstdc++ \
+        && cd /tmp \
+        && for ext in grpc protobuf; do \
+            apk fetch "php$v-pecl-$ext" \
+            && tar -xzf "php$v-pecl-$ext"-*.apk "usr/lib/php$v/modules/$ext.so" \
+            && mv "usr/lib/php$v/modules/$ext.so" "$(php-config --extension-dir)/" \
+            && docker-php-ext-enable "$ext" || exit 1; \
+        done \
+        && rm -rf /tmp/*; \
     fi
 
 # hardening for the session.upload_progress bug ahead of the Oct 2026 PHP security release

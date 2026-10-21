@@ -17,3 +17,5 @@ Provides latest PHP FPM with installed composer and various of extensions
 ## ghcr.io/arnidan/php-docker/php-fpm:{version}-with-grpc
 
 Provides latest PHP FPM with installed composer and various of extensions including grpc and protobuf
+
+The grpc and protobuf extensions are prebuilt binaries from the Alpine `phpXY-pecl-grpc` and `phpXY-pecl-protobuf` packages. Their versions can be older than the latest PECL release.
