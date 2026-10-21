@@ -5,13 +5,42 @@ on:
     branches: ['master']
   schedule:
     - cron: '0 0 * * 0'
+    # hourly: rebuild only when an upstream base image digest changed (security patches)
+    - cron: '17 * * * *'
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      key: ${{ steps.digests.outputs.key }}
+      changed: ${{ steps.cache.outputs.cache-hit != 'true' }}
+    steps:
+      - name: Resolve base image digests
+        id: digests
+        run: |
+          for v in 8.3 8.4 8.5; do
+            for img in php:$v-fpm-alpine dunglas/frankenphp:php$v; do
+              docker buildx imagetools inspect "$img" --format '{{.Manifest.Digest}}'
+            done
+          done | tee digests.txt
+          echo "key=base-images-$(sha256sum digests.txt | cut -c1-64)" >> "$GITHUB_OUTPUT"
+
+      # ponytail: GHA cache as state store; if the entry gets evicted we just rebuild once more
+      - name: Check if these digests were already built
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: digests.txt
+          key: ${{ steps.digests.outputs.key }}
+          lookup-only: true
+
   build-and-push-image:
+    needs: check
+    if: ${{ !cancelled() && (github.event.schedule != '17 * * * *' || (needs.check.result == 'success' && needs.check.outputs.changed == 'true')) }}
     name: Build ${{ matrix.image }}:${{ matrix.version }}${{ matrix.with-grpc == '1' && '-with-grpc' || '' }}
     runs-on: ubuntu-latest
     permissions:
@@ -62,3 +91,14 @@ jobs:
           platforms: linux/arm64,linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  save-digests:
+    needs: [check, build-and-push-image]
+    if: ${{ needs.check.result == 'success' && needs.check.outputs.changed == 'true' && needs.build-and-push-image.result == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ needs.check.outputs.key }}" > digests.txt
+      - uses: actions/cache/save@v4
+        with:
+          path: digests.txt
+          key: ${{ needs.check.outputs.key }}
