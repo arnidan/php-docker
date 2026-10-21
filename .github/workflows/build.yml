@@ -15,10 +15,23 @@ env:
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
     outputs:
       key: ${{ steps.digests.outputs.key }}
       changed: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      busy: ${{ steps.busy.outputs.count != '0' }}
     steps:
+      # builds take ~10h; without this the hourly check would cancel a running build every hour
+      - name: Count other unfinished runs of this workflow
+        id: busy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          count=$(gh run list -R "$GITHUB_REPOSITORY" --workflow build.yml -L 50 --json databaseId,status \
+            --jq 'map(select(.status != "completed" and .databaseId != ${{ github.run_id }})) | length')
+          echo "count=$count" | tee -a "$GITHUB_OUTPUT"
+
       - name: Resolve base image digests
         id: digests
         run: |
@@ -40,7 +53,7 @@ jobs:
 
   build-and-push-image:
     needs: check
-    if: ${{ !cancelled() && (github.event.schedule != '17 * * * *' || (needs.check.result == 'success' && needs.check.outputs.changed == 'true')) }}
+    if: ${{ !cancelled() && (github.event.schedule != '17 * * * *' || (needs.check.result == 'success' && needs.check.outputs.changed == 'true' && needs.check.outputs.busy == 'false')) }}
     # a newer build of the same image cancels an older one, so a stale build never overwrites a fresh tag
     concurrency:
       group: build-${{ matrix.image }}-${{ matrix.version }}-${{ matrix.with-grpc }}
