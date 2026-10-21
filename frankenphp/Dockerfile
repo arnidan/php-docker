@@ -27,3 +27,6 @@ ARG WITH_GRPC=0
 RUN if [ "$WITH_GRPC" = "1" ]; then \
         install-php-extensions protobuf grpc; \
     fi
+
+# hardening for the session.upload_progress bug ahead of the Oct 2026 PHP security release
+RUN echo "session.upload_progress.enabled = Off" > "$PHP_INI_DIR/conf.d/zz-security.ini"
