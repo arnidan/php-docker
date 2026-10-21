@@ -41,6 +41,10 @@ jobs:
   build-and-push-image:
     needs: check
     if: ${{ !cancelled() && (github.event.schedule != '17 * * * *' || (needs.check.result == 'success' && needs.check.outputs.changed == 'true')) }}
+    # a newer build of the same image cancels an older one, so a stale build never overwrites a fresh tag
+    concurrency:
+      group: build-${{ matrix.image }}-${{ matrix.version }}-${{ matrix.with-grpc }}
+      cancel-in-progress: true
     name: Build ${{ matrix.image }}:${{ matrix.version }}${{ matrix.with-grpc == '1' && '-with-grpc' || '' }}
     runs-on: ubuntu-latest
     permissions:
