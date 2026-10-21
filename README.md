@@ -8,7 +8,7 @@ The images build every week. A job also checks the upstream base images every ho
 
 ## Settings
 
-`session.upload_progress.enabled` is `Off` in all images. The file is `$PHP_INI_DIR/conf.d/zz-security.ini`. To turn it on again, override this file in your image.
+`session.upload_progress.enabled` is `Off` in the frankenphp images. The file is `$PHP_INI_DIR/conf.d/zz-security.ini`. To turn it on again, override this file in your image.
 
 ## ghcr.io/arnidan/php-docker/php-fpm:{version}
 

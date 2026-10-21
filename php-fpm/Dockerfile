@@ -40,6 +40,3 @@ RUN if [ "$WITH_GRPC" = "1" ]; then \
         done \
         && rm -rf /tmp/*; \
     fi
-
-# hardening for the session.upload_progress bug ahead of the Oct 2026 PHP security release
-RUN echo "session.upload_progress.enabled = Off" > "$PHP_INI_DIR/conf.d/zz-security.ini"
