@@ -6,10 +6,6 @@ AMD64 and ARM Docker images with PHP FPM
 
 The images build every week. A job also checks the upstream base images every hour. When an upstream image changes (for example, after a PHP security release), the images build again.
 
-## Settings
-
-`session.upload_progress.enabled` is `Off` in the frankenphp images. The file is `$PHP_INI_DIR/conf.d/zz-security.ini`. To turn it on again, override this file in your image.
-
 ## ghcr.io/arnidan/php-docker/php-fpm:{version}
 
 Provides latest PHP FPM with installed composer and various of extensions
